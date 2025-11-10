@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDD Compliance Portal | Definitely-Not-Evil-Corp</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+        }
+
+        .sidebar-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item.active {
+            background: #f1f5f9;
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .sidebar-item:hover {
+            background: #f8fafc;
+            color: var(--primary);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* Compliance Widget */
+        .compliance-widget {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .compliance-header {
+            display: flex;
+            justify-content: between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+        }
+
+        .compliance-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .compliance-subtitle {
+            opacity: 0.9;
+            font-size: 0.875rem;
+        }
+
+        .countdown {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 2rem 0;
+            font-feature-settings: "tnum";
+        }
+
+        .compliance-status {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn:disabled {
+            background: var(--secondary);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Prospect List */
+        .prospect-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .prospect-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .prospect-item:hover {
+            border-color: var(--primary);
+        }
+
+        .prospect-info {
+            flex: 1;
+        }
+
+        .prospect-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .prospect-details {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .prospect-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-waiting {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-compliant {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-icon">⚖️</div>
+                    FDD Compliance Portal
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Dashboard</a>
+                    <a href="#" class="nav-link">Prospects</a>
+                    <a href="#" class="nav-link">Documents</a>
+                    <a href="#" class="nav-link">Audit Trail</a>
+                    <a href="#" class="nav-link">Settings</a>
+                </div>
+                <div class="user-menu">
+                    <div class="avatar">AD</div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="#" class="sidebar-item active">
+                📊 Dashboard
+            </a>
+            <a href="#" class="sidebar-item">
+                👥 Franchise Prospects
+            </a>
+            <a href="#" class="sidebar-item">
+                📄 FDD Management
+            </a>
+            <a href="#" class="sidebar-item">
+                ⚖️ Compliance Center
+            </a>
+            <a href="#" class="sidebar-item">
+                📋 Audit Trail
+            </a>
+            <a href="#" class="sidebar-item">
+                ⚙️ Settings
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalProspects">3</div>
+                    <div class="stat-label">Total Prospects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="compliantCount">1</div>
+                    <div class="stat-label">In Compliance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="waitingCount">2</div>
+                    <div class="stat-label">Waiting Period</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="riskCount">0</div>
+                    <div class="stat-label">At Risk</div>
+                </div>
+            </div>
+
+            <!-- Compliance Widget -->
+            <div class="compliance-widget">
+                <div class="compliance-header">
+                    <div>
+                        <div class="compliance-title">FDD Compliance Status</div>
+                        <div class="compliance-subtitle">Arthur Wishart Act - 14-Day Disclosure Period</div>
+                    </div>
+                    <div class="text-center">
+                        <div style="font-size: 0.875rem; opacity: 0.9;">Next Deadline</div>
+                        <div style="font-size: 1.25rem; font-weight: 700;" id="nextDeadline">2 days</div>
+                    </div>
+                </div>
+                
+                <div class="countdown" id="mainCountdown">13:22:15:08</div>
+                
+                <div class="compliance-status">
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        ⚠️ Legal Hold Active
+                    </div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">
+                        Agreement signing blocked until 14-day disclosure period completes
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-danger" disabled id="mainActionBtn">
+                        ❌ Agreement Signing Blocked
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions & Recent Prospects -->
+            <div class="flex gap-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Quick Actions</div>
+                    </div>
+                    <div class="flex gap-4" style="flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="showPage('new-prospect')">
+                            👥 Add New Prospect
+                        </button>
+                        <button class="btn btn-primary">
+                            📄 Upload FDD Document
+                        </button>
+                        <button class="btn btn-primary">
+                            📋 Generate Compliance Report
+                        </button>
+                        <button class="btn btn-primary">
+                            ⚖️ View Legal Guidelines
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Prospects -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Recent Prospects</div>
+                    </div>
+                    <div class="prospect-list" id="recentProspects">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Prospect Modal (simplified) -->
+    <div id="new-prospect" class="hidden">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Add New Franchise Prospect</div>
+            </div>
+            <form id="prospectForm">
+                <div class="form-group">
+                    <label class="form-label">Prospect Name</label>
+                    <input type="text" class="form-input" placeholder="Enter prospect name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="Enter email address" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Proposed Location</label>
+                    <input type="text" class="form-input" placeholder="Enter location" required>
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" class="btn btn-primary">Start Compliance Period</button>
+                    <button type="button" class="btn" onclick="showPage('dashboard')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let prospects = [
+            {
+                id: 1,
+                name: "John Smith",
+                email: "john@example.com",
+                location: "Toronto, ON",
+                fddUploadDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                status: "waiting"
+            },
+            {
+                id: 2,
+                name: "Sarah Johnson", 
+                email: "sarah@example.com",
+                location: "Vancouver, BC",
+                fddUploadDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago
+                status: "waiting"
+            },
+            {
+                id: 3,
+                name: "Mike Chen",
+                email: "mike@example.com",
+                location: "Calgary, AB", 
+                fddUploadDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+                status: "compliant"
+            }
+        ];
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const total = prospects.length;
+            const compliant = prospects.filter(p => p.status === 'compliant').length;
+            const waiting = prospects.filter(p => p.status === 'waiting').length;
+            const atRisk = 0; // You can calculate based on business logic
+
+            document.getElementById('totalProspects').textContent = total;
+            document.getElementById('compliantCount').textContent = compliant;
+            document.getElementById('waitingCount').textContent = waiting;
+            document.getElementById('riskCount').textContent = atRisk;
+
+            // Update recent prospects list
+            renderRecentProspects();
+        }
+
+        // Render recent prospects
+        function renderRecentProspects() {
+            const container = document.getElementById('recentProspects');
+            container.innerHTML = '';
+
+            prospects.forEach(prospect => {
+                const item = document.createElement('div');
+                item.className = 'prospect-item';
+                item.innerHTML = `
+                    <div class="prospect-info">
+                        <div class="prospect-name">${prospect.name}</div>
+                        <div class="prospect-details">${prospect.location} • ${prospect.email}</div>
+                    </div>
+                    <div class="prospect-status ${prospect.status === 'compliant' ? 'status-compliant' : 'status-waiting'}">
+                        ${prospect.status === 'compliant' ? 'Compliant' : 'Waiting'}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Simulate countdown (you can replace with real countdown logic)
+        function simulateCountdown() {
+            const countdownElement = document.getElementById('mainCountdown');
+            // This is a simulation - replace with real countdown logic
+            countdownElement.textContent = "13:22:15:08";
+        }
+
+        // Initialize
+        function init() {
+            updateDashboard();
+            simulateCountdown();
+            
+            // Form submission
+            document.getElementById('prospectForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('New prospect added! 14-day compliance period started.');
+                showPage('dashboard');
+            });
+        }
+
+        // Start the application
+        window.onload = init;
+    </script>
+</body>
+</html>
